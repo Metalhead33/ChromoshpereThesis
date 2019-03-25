@@ -40,14 +40,19 @@ namespace Mh {
 		this->container = mov.container;
 		mov.container = nullptr;
 	}
-	ImageWrapper_imp( int width, int height, int bpp, unsigned red_mask=0, unsigned green_mask=0, unsigned blue_mask=0 )
-		: container( FreeImage_Allocate( width, height, bpp, red_mask, green_mask, blue_mask ),
+	ImageWrapper_imp( int width, int height, int bpp, unsigned red_mask = 0,
+			  unsigned green_mask = 0, unsigned blue_mask = 0 )
+		: container( FreeImage_Allocate( width, height, bpp, red_mask,
+						 green_mask, blue_mask ),
 			 FreeImage_Unload ) {
 		;
 	}
-	ImageWrapper_imp( ImageFormat typus, int width, int height,
-			  int bpp = 8, unsigned red_mask=0, unsigned green_mask=0, unsigned blue_mask=0 )
-		: container( FreeImage_AllocateT( FREE_IMAGE_TYPE(typus), width, height, bpp, red_mask, green_mask, blue_mask),
+	ImageWrapper_imp( ImageFormat typus, int width, int height, int bpp = 8,
+			  unsigned red_mask = 0, unsigned green_mask = 0,
+			  unsigned blue_mask = 0 )
+		: container( FreeImage_AllocateT( FREE_IMAGE_TYPE( typus ), width,
+						  height, bpp, red_mask, green_mask,
+						  blue_mask ),
 			 FreeImage_Unload ) {
 		;
 	}
@@ -57,7 +62,8 @@ namespace Mh {
 		;
 	}
 	ImageWrapper_imp( ImageFileType typus, const char *path )
-		: container( FreeImage_Load( FREE_IMAGE_FORMAT(typus), path ), FreeImage_Unload ) {
+		: container( FreeImage_Load( FREE_IMAGE_FORMAT( typus ), path ),
+			 FreeImage_Unload ) {
 		;
 	}
 	ImageWrapper_imp( Abstract::FIO &handle )
@@ -69,39 +75,46 @@ namespace Mh {
 		;
 	}
 	ImageWrapper_imp( ImageFileType typus, Abstract::FIO &handle )
-		: container( FreeImage_LoadFromHandle( FREE_IMAGE_FORMAT(typus), &AbstractFreadImgio,
+		: container( FreeImage_LoadFromHandle( FREE_IMAGE_FORMAT( typus ),
+						   &AbstractFreadImgio,
 						   &handle ),
 			 FreeImage_Unload ) {
 		;
 	}
-	ImageWrapper_imp(void *bits, int width, int height, int pitch, unsigned bpp = 24,
-					 unsigned red_mask = FI_RGBA_RED_MASK,
-					 unsigned green_mask = FI_RGBA_GREEN_MASK,
-					 unsigned blue_mask = FI_RGBA_BLUE_MASK,
-					 bool topdown = false )
-		: container( FreeImage_ConvertFromRawBits(static_cast<BYTE*>(bits),width,height,pitch,bpp,
-												  red_mask,green_mask,blue_mask,topdown)
-					 , FreeImage_Unload ) {
+	ImageWrapper_imp( void *bits, int width, int height, int pitch,
+			  unsigned bpp = 24,
+			  unsigned red_mask = FI_RGBA_RED_MASK,
+			  unsigned green_mask = FI_RGBA_GREEN_MASK,
+			  unsigned blue_mask = FI_RGBA_BLUE_MASK,
+			  bool topdown = false )
+		: container( FreeImage_ConvertFromRawBits(
+				 static_cast< BYTE * >( bits ), width, height,
+				 pitch, bpp, red_mask, green_mask, blue_mask,
+				 topdown ),
+			 FreeImage_Unload ) {
 		;
 	}
 	bool save( ImageFileType format, const char *path ) const {
 		if ( container ) {
-		return FreeImage_Save( FREE_IMAGE_FORMAT(format), container.get( ), path );
+		return FreeImage_Save( FREE_IMAGE_FORMAT( format ),
+					   container.get( ), path );
 		} else
 		return false;
 	}
 	bool save( ImageFileType format, Abstract::FIO &handle ) const {
 		if ( container ) {
-		return FreeImage_SaveToHandle( FREE_IMAGE_FORMAT(format), container.get( ),
+		return FreeImage_SaveToHandle( FREE_IMAGE_FORMAT( format ),
+						   container.get( ),
 						   &AbstractFreadImgio, &handle );
 		} else
 		return false;
 	}
 	ImageFormat getImageType( ) const {
 		if ( container )
-		return ImageFormat(FreeImage_GetImageType( container.get( ) ));
+		return ImageFormat(
+			FreeImage_GetImageType( container.get( ) ) );
 		else
-		return ImageFormat(FIT_UNKNOWN);
+		return ImageFormat( FIT_UNKNOWN );
 	}
 	unsigned getColorsUsed( ) const {
 		if ( container )
@@ -572,72 +585,69 @@ namespace Mh {
 	bool isValid( ) const { return container != nullptr; }
 	};
 
-	ImageWrapper::ImageWrapper()
-		: pimpl(nullptr)
-	{
-		;
-	}
+	ImageWrapper::ImageWrapper( ) : pimpl( nullptr ) { ; }
 	ImageWrapper::ImageWrapper( const ImageWrapper &cpy )
-		: pimpl((cpy.pimpl) ? new ImageWrapper_imp(*cpy.pimpl) : nullptr)
-	{
-		;
+	: pimpl( ( cpy.pimpl ) ? new ImageWrapper_imp( *cpy.pimpl )
+				   : nullptr ) {
+	;
 	}
-	ImageWrapper::ImageWrapper( ImageWrapper &&mov )
-		: pimpl(mov.pimpl)
-	{
-		mov.pimpl = nullptr;
+	ImageWrapper::ImageWrapper( ImageWrapper &&mov ) : pimpl( mov.pimpl ) {
+	mov.pimpl = nullptr;
 	}
-	void ImageWrapper::operator=( const ImageWrapper &cpy )
-	{
-		pimpl = (cpy.pimpl) ? sImageWrapper_imp(new ImageWrapper_imp(*cpy.pimpl)) : nullptr;
+	void ImageWrapper::operator=( const ImageWrapper &cpy ) {
+	pimpl = ( cpy.pimpl )
+			? sImageWrapper_imp( new ImageWrapper_imp( *cpy.pimpl ) )
+			: nullptr;
 	}
-	void ImageWrapper::operator=( ImageWrapper &&mov )
-	{
-		this->pimpl = mov.pimpl;
-		mov.pimpl = nullptr;
+	void ImageWrapper::operator=( ImageWrapper &&mov ) {
+	this->pimpl = mov.pimpl;
+	mov.pimpl = nullptr;
 	}
-	ImageWrapper::ImageWrapper(void *bits, int width, int height, int pitch, unsigned bpp,
-				unsigned red_mask, unsigned green_mask, unsigned blue_mask,
-				 bool topdown)
-		: pimpl(new ImageWrapper_imp(bits,width,height,pitch,bpp,red_mask,green_mask,blue_mask,topdown))
-	{
-		;
+	ImageWrapper::ImageWrapper( void *bits, int width, int height, int pitch,
+				unsigned bpp, unsigned red_mask,
+				unsigned green_mask, unsigned blue_mask,
+				bool topdown )
+	: pimpl( new ImageWrapper_imp( bits, width, height, pitch, bpp,
+					   red_mask, green_mask, blue_mask,
+					   topdown ) ) {
+	;
 	}
-	ImageWrapper::ImageWrapper(void *bits, int width, int height, int pitch, unsigned bpp, bool topdown)
-		: pimpl(new ImageWrapper_imp(bits,width,height,pitch,bpp,
-									 FI_RGBA_RED_MASK,FI_RGBA_GREEN_MASK,FI_RGBA_BLUE_MASK,topdown))
-	{
-		;
+	ImageWrapper::ImageWrapper( void *bits, int width, int height, int pitch,
+				unsigned bpp, bool topdown )
+	: pimpl( new ImageWrapper_imp( bits, width, height, pitch, bpp,
+					   FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK,
+					   FI_RGBA_BLUE_MASK, topdown ) ) {
+	;
 	}
-	ImageWrapper::ImageWrapper(int width, int height, int bpp , unsigned red_mask, unsigned green_mask, unsigned blue_mask)
-		: pimpl(new ImageWrapper_imp(width,height,bpp,red_mask,green_mask,blue_mask))
-	{
-		;
+	ImageWrapper::ImageWrapper( int width, int height, int bpp,
+				unsigned red_mask, unsigned green_mask,
+				unsigned blue_mask )
+	: pimpl( new ImageWrapper_imp( width, height, bpp, red_mask, green_mask,
+					   blue_mask ) ) {
+	;
 	}
-	ImageWrapper::ImageWrapper(ImageFormat typus, int width, int height, int bpp, unsigned red_mask, unsigned green_mask, unsigned blue_mask)
-		: pimpl(new ImageWrapper_imp(typus,width,height,bpp,red_mask,green_mask,blue_mask))
-	{
-		;
+	ImageWrapper::ImageWrapper( ImageFormat typus, int width, int height,
+				int bpp, unsigned red_mask, unsigned green_mask,
+				unsigned blue_mask )
+	: pimpl( new ImageWrapper_imp( typus, width, height, bpp, red_mask,
+					   green_mask, blue_mask ) ) {
+	;
 	}
 	ImageWrapper::ImageWrapper( const char *path )
-		: pimpl(new ImageWrapper_imp(path))
-	{
-		;
+	: pimpl( new ImageWrapper_imp( path ) ) {
+	;
 	}
 	ImageWrapper::ImageWrapper( ImageFileType typus, const char *path )
-		: pimpl(new ImageWrapper_imp(typus,path))
-	{
-		;
+	: pimpl( new ImageWrapper_imp( typus, path ) ) {
+	;
 	}
 	ImageWrapper::ImageWrapper( Abstract::FIO &handle )
-		: pimpl(new ImageWrapper_imp(handle))
-	{
-		;
+	: pimpl( new ImageWrapper_imp( handle ) ) {
+	;
 	}
 	ImageWrapper::ImageWrapper( ImageFileType typus, Abstract::FIO &handle )
-		: pimpl(new ImageWrapper_imp(typus,handle))
-	{
-		;
+	: pimpl( new ImageWrapper_imp( typus, handle ) ) {
+	;
 	}
 
 	unsigned ImageWrapper::getColorsUsed( ) const {
@@ -848,20 +858,23 @@ namespace Mh {
 		return true;
 	}
 	}
-	unsigned ImageWrapper::getRedMask() const
-	{
-		if(pimpl) return pimpl->getRedMask();
-		else return 0;
+	unsigned ImageWrapper::getRedMask( ) const {
+	if ( pimpl )
+		return pimpl->getRedMask( );
+	else
+		return 0;
 	}
-	unsigned ImageWrapper::getGreenMask() const
-	{
-		if(pimpl) return pimpl->getGreenMask();
-		else return 0;
+	unsigned ImageWrapper::getGreenMask( ) const {
+	if ( pimpl )
+		return pimpl->getGreenMask( );
+	else
+		return 0;
 	}
-	unsigned ImageWrapper::getBlueMask() const
-	{
-		if(pimpl) return pimpl->getBlueMask();
-		else return 0;
+	unsigned ImageWrapper::getBlueMask( ) const {
+	if ( pimpl )
+		return pimpl->getBlueMask( );
+	else
+		return 0;
 	}
 	bool ImageWrapper::ditherCluster6x6( ) const {
 	if ( !pimpl )
@@ -1052,67 +1065,72 @@ namespace Mh {
 	}
 	}
 
-	bool ImageWrapper::hasPixels( ) const
-	{
-		if(pimpl) return pimpl->hasPixels();
-		else return false;
+	bool ImageWrapper::hasPixels( ) const {
+	if ( pimpl )
+		return pimpl->hasPixels( );
+	else
+		return false;
 	}
-	bool ImageWrapper::hasThumbnail( ) const
-	{
-		if(pimpl) return pimpl->hasThumbnail();
-		else return false;
+	bool ImageWrapper::hasThumbnail( ) const {
+	if ( pimpl )
+		return pimpl->hasThumbnail( );
+	else
+		return false;
 	}
-	ImageWrapper ImageWrapper::copyThumbnail( ) const
-	{
-		if(pimpl)
-		{
-			ImageWrapper tmp;
-			tmp.pimpl = sImageWrapper_imp(new ImageWrapper_imp(pimpl->copyThumbnail() ));
-			return tmp;
-		} else return ImageWrapper();
+	ImageWrapper ImageWrapper::copyThumbnail( ) const {
+	if ( pimpl ) {
+		ImageWrapper tmp;
+		tmp.pimpl = sImageWrapper_imp(
+		new ImageWrapper_imp( pimpl->copyThumbnail( ) ) );
+		return tmp;
+	} else
+		return ImageWrapper( );
 	}
-	bool ImageWrapper::setThumbnail( const ImageWrapper &cpy ) const
-	{
-		if(pimpl)
-		{
-			if(cpy.hasPixels()) {
-				return pimpl->setThumbnail(*cpy.pimpl);
-			}
-			else return false;
-		}
-		else return false;
+	bool ImageWrapper::setThumbnail( const ImageWrapper &cpy ) const {
+	if ( pimpl ) {
+		if ( cpy.hasPixels( ) ) {
+		return pimpl->setThumbnail( *cpy.pimpl );
+		} else
+		return false;
+	} else
+		return false;
 	}
-	bool ImageWrapper::removeThumbnail( void ) const
-	{
-		if(pimpl)
-		{
-			return pimpl->removeThumbnail();
-		} else return false;
+	bool ImageWrapper::removeThumbnail( void ) const {
+	if ( pimpl ) {
+		return pimpl->removeThumbnail( );
+	} else
+		return false;
 	}
-	void* ImageWrapper::getBytes( ) const
-	{
-		if(pimpl) return pimpl->getBytes();
-		else return nullptr;
+	void *ImageWrapper::getBytes( ) const {
+	if ( pimpl )
+		return pimpl->getBytes( );
+	else
+		return nullptr;
 	}
-	void* ImageWrapper::getScanline( int scanline ) const
-	{
-		if(pimpl) return pimpl->getScanline(scanline);
-		else return nullptr;
+	void *ImageWrapper::getScanline( int scanline ) const {
+	if ( pimpl )
+		return pimpl->getScanline( scanline );
+	else
+		return nullptr;
 	}
-	bool ImageWrapper::save( ImageFileType format, const char *path ) const
-	{
-		if(pimpl) return pimpl->save(format,path);
-		else return false;
+	bool ImageWrapper::save( ImageFileType format, const char *path ) const {
+	if ( pimpl )
+		return pimpl->save( format, path );
+	else
+		return false;
 	}
-	bool ImageWrapper::save( ImageFileType format, Abstract::FIO &handle ) const
-	{
-		if(pimpl) return pimpl->save(format,handle);
-		else return false;
+	bool ImageWrapper::save( ImageFileType format,
+				 Abstract::FIO &handle ) const {
+	if ( pimpl )
+		return pimpl->save( format, handle );
+	else
+		return false;
 	}
-	ImageFormat ImageWrapper::getFormat() const
-	{
-		if(pimpl) return pimpl->getImageType();
-		else return ImageFormat::UNKNOWN;
+	ImageFormat ImageWrapper::getFormat( ) const {
+	if ( pimpl )
+		return pimpl->getImageType( );
+	else
+		return ImageFormat::UNKNOWN;
 	}
 
 } // namespace Mh

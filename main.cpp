@@ -1,10 +1,9 @@
+#include "ImgClassifier/ProfileImage.hpp"
 #include "MainWindow.hpp"
 #include <QApplication>
-#include "ImgClassifier/ProfileImage.hpp"
 #include <iomanip>
 
-int main(int argc, char *argv[])
-{
+int main( int argc, char *argv[] ) {
 	/*QApplication a(argc, argv);
 	MainWindow w;
 	w.show();
@@ -28,9 +27,18 @@ int main(int argc, char *argv[])
 			<< "Max: " << std::setprecision(7)<< fmax << "\n"
 			<< "Avg: " << std::setprecision(7)<< favg << "\n";*/
 
-	Mh::ImageWrapper cica3("/tmp/cica3.jpg");
-	Mh::ImageWrapper cica4("/tmp/cica4.jpg");
-	Mh::ImageWrapper cica5 = sharpnessComposite(cica3,cica4);
-	cica5.save(Mh::ImageFileType::JPEG,"/tmp/cica5.jpg");
+	if ( argc >= 2 ) {
+	std::cout.setf( std::ios::fixed );
+	for ( int i = 1; i < argc; ++i ) {
+		std::cout << argv[i] << "\n";
+		float fmin, fmax, favg;
+		Mh::ImageWrapper img( argv[i] );
+		img.convertTo24Bits( );
+		img = produceSharpnessProfile( img, 15, &fmin, &fmax, &favg );
+		std::cout << "Min: " << std::setprecision( 7 ) << fmin << "\n"
+			  << "Max: " << std::setprecision( 7 ) << fmax << "\n"
+			  << "Avg: " << std::setprecision( 7 ) << favg << "\n";
+	}
+	}
 	return 0;
 }
