@@ -1,5 +1,7 @@
 #include "MhImageWrapper.hpp"
+// #include <FreeImage.h>
 extern "C" {
+// #define FREEIMAGE_LIB
 #include <FreeImage.h>
 }
 
@@ -160,7 +162,7 @@ namespace Mh {
 	}
 	unsigned getMemorySize( ) const {
 		if ( container )
-		return FreeImage_GetMemorySize( container.get( ) );
+		return FreeImage_GetDIBSize(container.get( ) );
 		else
 		return 0;
 	}
@@ -429,7 +431,7 @@ namespace Mh {
 		return quantize( FIQ_NNQUANT );
 	}
 	ImageWrapper_imp quantizeCarlsten( ) const {
-		return quantize( FIQ_LFPQUANT );
+		return quantize( FIQ_NNQUANT );
 	}
 	ImageWrapper_imp threshold( unsigned char hold ) const {
 		if ( container )
@@ -501,7 +503,7 @@ namespace Mh {
 	ImageWrapper_imp convertToRGBAF( ) const {
 		if ( container )
 		return ImageWrapper_imp(
-			ContainerType( FreeImage_ConvertToRGBAF( container.get( ) ),
+			ContainerType( FreeImage_ConvertToRGBF( container.get( ) ),
 				   FreeImage_Unload ) );
 		else
 		return ImageWrapper_imp( );
@@ -525,7 +527,7 @@ namespace Mh {
 	ImageWrapper_imp convertToRGBA16( ) const {
 		if ( container )
 		return ImageWrapper_imp( ContainerType(
-			FreeImage_ConvertToRGBA16( container.get( ) ),
+			FreeImage_ConvertToRGB16( container.get( ) ),
 			FreeImage_Unload ) );
 		else
 		return ImageWrapper_imp( );

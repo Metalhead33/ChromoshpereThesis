@@ -28,17 +28,16 @@ int main( int argc, char *argv[] ) {
 			<< "Avg: " << std::setprecision(7)<< favg << "\n";*/
 
 	if ( argc >= 2 ) {
-	std::cout.setf( std::ios::fixed );
+	Mh::ImageWrapper prev;
 	for ( int i = 1; i < argc; ++i ) {
-		std::cout << argv[i] << "\n";
-		float fmin, fmax, favg;
-		Mh::ImageWrapper img( argv[i] );
-		img.convertTo24Bits( );
-		img = produceSharpnessProfile( img, 15, &fmin, &fmax, &favg );
-		std::cout << "Min: " << std::setprecision( 7 ) << fmin << "\n"
-			  << "Max: " << std::setprecision( 7 ) << fmax << "\n"
-			  << "Avg: " << std::setprecision( 7 ) << favg << "\n";
+		Mh::ImageWrapper img(argv[i]);
+		img.convertTo24Bits();
+		if(i > 1)
+		{
+			prev = sharpnessComposite(prev,img);
+		} else prev = std::move(img);
 	}
+	prev.save(Mh::ImageFileType::JPEG,"/tmp/finish.jpg");
 	}
 	return 0;
 }
