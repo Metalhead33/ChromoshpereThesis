@@ -441,6 +441,48 @@ namespace Mh {
 		else
 		return ImageWrapper_imp( );
 	}
+	ImageWrapper_imp rotate(double angle) const {
+		if ( container )
+		return ImageWrapper_imp( ContainerType(
+			FreeImage_Rotate( container.get(), angle),
+			FreeImage_Unload) );
+		else
+		return ImageWrapper_imp( );
+	}
+	ImageWrapper_imp rotateEx(double angle, double x_shift, double y_shift, double x_origin,
+							  double y_origin, bool use_mask) const {
+		if ( container )
+		return ImageWrapper_imp( ContainerType(
+			FreeImage_RotateEx( container.get(), angle, x_shift, y_shift, x_origin, y_origin, use_mask),
+			FreeImage_Unload) );
+		else
+		return ImageWrapper_imp( );
+	}
+	ImageWrapper_imp rescale(int new_with, int new_height, FREE_IMAGE_FILTER filter) const {
+		if ( container )
+		return ImageWrapper_imp( ContainerType(
+			FreeImage_Rescale( container.get(), new_with, new_height, filter),
+			FreeImage_Unload) );
+		else
+		return ImageWrapper_imp( );
+	}
+	/*ImageWrapper_imp rescaleRect(int dst_width, int dst_height, int left, int top,
+								 int right, int bottom, FREE_IMAGE_FILTER filter) const {
+		if ( container )
+		return ImageWrapper_imp( ContainerType(
+			FreeImage_RescaleRect( container.get(), dst_width, dst_height, left, top, right, bottom, filter),
+			FreeImage_Unload) );
+		else
+		return ImageWrapper_imp( );
+	}*/
+	ImageWrapper_imp createThumbmail(int pixelCnt) const {
+		if ( container )
+		return ImageWrapper_imp( ContainerType(
+			FreeImage_MakeThumbnail( container.get(), pixelCnt),
+			FreeImage_Unload) );
+		else
+		return ImageWrapper_imp( );
+	}
 	ImageWrapper_imp dither( FREE_IMAGE_DITHER algorithm ) const {
 		if ( container )
 		return ImageWrapper_imp( ContainerType(
@@ -585,6 +627,44 @@ namespace Mh {
 		return ImageWrapper_imp( );
 	}
 	bool isValid( ) const { return container != nullptr; }
+	bool adjustGamma(double gamma) const {
+		if(container) return FreeImage_AdjustGamma(container.get(),gamma);
+		else return false;
+	}
+	bool adjustBrightness(double percentage) const {
+		if(container) return FreeImage_AdjustBrightness(container.get(),percentage);
+		else return false;
+	}
+	bool adjustContrast(double percentage) const {
+		if(container) return FreeImage_AdjustContrast(container.get(),percentage);
+		else return false;
+	}
+	bool invert(void) const {
+		if(container) return FreeImage_Invert(container.get());
+		else return false;
+	}
+	bool adjustColors(double brightness, double contrast, double gamma, bool toInvert) const {
+		if(container) return FreeImage_AdjustColors(container.get(),brightness,contrast,gamma,toInvert);
+		else return false;
+	}
+	ImageWrapper_imp copy(int left, int top, int right, int bottom) const {
+		if(container) return ImageWrapper_imp(
+					ContainerType(FreeImage_Copy(container.get(), left, top, right, bottom),FreeImage_Unload)
+					);
+		else return ImageWrapper_imp();
+	}
+	static bool paste(const ImageWrapper_imp& to, const ImageWrapper_imp& from, int left, int top, int alpha) {
+		if(to.container && from.container) return FreeImage_Paste(to.container.get(), from.container.get(),left,top,alpha);
+		else return false;
+	}
+	bool pasteFrom(const ImageWrapper_imp& from, int left, int top, int alpha) const
+	{
+		return paste(*this,from,left,top,alpha);
+	}
+	bool pasteTo(const ImageWrapper_imp& to, int left, int top, int alpha) const
+	{
+		return paste(to,*this,left,top,alpha);
+	}
 	};
 
 	ImageWrapper::ImageWrapper( ) : pimpl( nullptr ) { ; }
@@ -1133,6 +1213,119 @@ namespace Mh {
 		return pimpl->getImageType( );
 	else
 		return ImageFormat::UNKNOWN;
+	}
+
+
+	bool ImageWrapper::rotate(double angle) const
+	{
+		if(!pimpl) return false;
+		if ( !pimpl->isValid( ) )
+			return false;
+		ImageWrapper_imp tmp =
+			pimpl->rotate( angle );
+		if ( !tmp.hasPixels( ) )
+			return false;
+		else {
+			*pimpl = std::move( tmp );
+			return true;
+		}
+	}
+	bool ImageWrapper::rotateEx(double angle, double x_shift, double y_shift, double x_origin, double y_origin, bool use_mask) const
+	{
+		if(!pimpl) return false;
+		if ( !pimpl->isValid( ) )
+			return false;
+		ImageWrapper_imp tmp =
+			pimpl->rotateEx( angle, x_shift, y_shift, x_origin, y_origin, use_mask );
+		if ( !tmp.hasPixels( ) )
+			return false;
+		else {
+			*pimpl = std::move( tmp );
+			return true;
+		}
+	}
+	bool ImageWrapper::rescale(int new_with, int new_height, RescaleFilter filter) const
+	{
+		if(!pimpl) return false;
+		if ( !pimpl->isValid( ) )
+			return false;
+		ImageWrapper_imp tmp =
+			pimpl->rescale( new_with, new_height, FREE_IMAGE_FILTER(filter) );
+		if ( !tmp.hasPixels( ) )
+			return false;
+		else {
+			*pimpl = std::move( tmp );
+			return true;
+		}
+	}
+	bool ImageWrapper::createThumbmail(int pixelCnt) const
+	{
+		if(!pimpl) return false;
+		if ( !pimpl->isValid( ) )
+			return false;
+		ImageWrapper_imp tmp =
+			pimpl->createThumbmail( pixelCnt );
+		if ( !tmp.hasPixels( ) )
+			return false;
+		else {
+			*pimpl = std::move( tmp );
+			return true;
+		}
+	}
+	bool ImageWrapper::crop(int left, int top, int right, int bottom) const
+	{
+		if(!pimpl) return false;
+		if ( !pimpl->isValid( ) )
+			return false;
+		ImageWrapper_imp tmp =
+			pimpl->copy( left,top,right,bottom );
+		if ( !tmp.hasPixels( ) )
+			return false;
+		else {
+			*pimpl = std::move( tmp );
+			return true;
+		}
+	}
+	bool ImageWrapper::adjustGamma(double gamma) const
+	{
+		if(pimpl) return  pimpl->adjustGamma(gamma);
+		else return false;
+	}
+	bool ImageWrapper::adjustBrightness(double percentage) const
+	{
+		if(pimpl) return  pimpl->adjustBrightness(percentage);
+		else return false;
+	}
+	bool ImageWrapper::adjustContrast(double percentage) const
+	{
+		if(pimpl) return  pimpl->adjustContrast(percentage);
+		else return false;
+	}
+	bool ImageWrapper::invert(void) const
+	{
+		if(pimpl) return  pimpl->invert();
+		else return false;
+	}
+	bool ImageWrapper::adjustColors(double brightness, double contrast, double gamma, bool invert) const
+	{
+		if(pimpl) return  pimpl->adjustColors(brightness,contrast,gamma,invert);
+		else return false;
+	}
+	bool ImageWrapper::paste(const ImageWrapper& to, const ImageWrapper& from, int left, int top, int alpha)
+	{
+		if(to.pimpl && from.pimpl) return ImageWrapper_imp::paste(*to.pimpl,*from.pimpl,
+																		 left,top,alpha);
+		else return false;
+	}
+	bool ImageWrapper::pasteFrom(const ImageWrapper& from, int left, int top, int alpha)
+	{
+		if(pimpl && from.pimpl) return  pimpl->pasteFrom(*from.pimpl,left,top,alpha);
+		else return false;
+	}
+	bool ImageWrapper::pasteTo(const ImageWrapper& to, int left, int top, int alpha)
+	{
+		if(pimpl && to.pimpl) return  pimpl->pasteTo(*to.pimpl,left,top,alpha);
+		else return false;
 	}
 
 } // namespace Mh

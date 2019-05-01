@@ -83,6 +83,14 @@ namespace Mh {
 	WEBP = 35,
 	JXR = 36
 	};
+	enum class RescaleFilter : int {
+	FILTER_BOX		  = 0,	// Box, pulse, Fourier window, 1st order (constant) b-spline
+	FILTER_BICUBIC	  = 1,	// Mitchell & Netravali's two-param cubic filter
+	FILTER_BILINEAR   = 2,	// Bilinear filter
+	FILTER_BSPLINE	  = 3,	// 4th order (cubic) b-spline
+	FILTER_CATMULLROM = 4,	// Catmull-Rom spline, Overhauser spline
+	FILTER_LANCZOS3	  = 5	// Lanczos3 filter
+	};
 
 	DEFINE_CLASS( ImageWrapper )
 	class ImageWrapper {
@@ -169,6 +177,20 @@ namespace Mh {
 				  double color_correction = 0.0 ) const;
 	bool tonemapFattal02( double color_saturation = 0.5,
 				  double attenuation = 0.85 ) const;
+	// Other transformations
+	bool rotate(double angle) const;
+	bool rotateEx(double angle, double x_shift, double y_shift, double x_origin, double y_origin, bool use_mask) const;
+	bool rescale(int new_with, int new_height, RescaleFilter filter) const;
+	bool createThumbmail(int pixelCnt) const;
+	bool crop(int left, int top, int right, int bottom) const;
+	bool adjustGamma(double gamma) const;
+	bool adjustBrightness(double percentage) const;
+	bool adjustContrast(double percentage) const;
+	bool invert(void) const;
+	bool adjustColors(double brightness, double contrast, double gamma, bool invert) const;
+	static bool paste(const ImageWrapper& to, const ImageWrapper& from, int left, int top, int alpha);
+	bool pasteFrom(const ImageWrapper& from, int left, int top, int alpha);
+	bool pasteTo(const ImageWrapper& to, int left, int top, int alpha);
 	};
 
 } // namespace Mh
