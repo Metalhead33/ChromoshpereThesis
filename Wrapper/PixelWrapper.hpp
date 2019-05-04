@@ -95,6 +95,11 @@ template < typename PixelType > struct PixelWrapper {
 	  floatWith( float( width - 1 ) ), floatHeight( float( height - 1 ) ) {
 	;
 	}
+	PixelWrapper( void* ptr, int width, int height )
+	: pixels( reinterpret_cast<PixelWrapper>(ptr) ), width( width ), height( height ),
+	  floatWith( float( width - 1 ) ), floatHeight( float( height - 1 ) ) {
+	;
+	}
 };
 
 #endif // PIXELWRAPPER_HPP

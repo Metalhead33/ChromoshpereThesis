@@ -31,7 +31,8 @@ SOURCES += \
     Io/StdStream.cpp \
     Wrapper/BlurImage.cpp \
     Wrapper/MhImageWrapper.cpp \
-    ImgClassifier/ProfileImage.cpp
+    ImgClassifier/ProfileImage.cpp \
+    ImgClassifier/ImageMetadataContainer.cpp
 
 HEADERS += \
         MainWindow.hpp \
@@ -48,7 +49,8 @@ HEADERS += \
     Wrapper/PixelWrapper.hpp \
     Wrapper/Matrix.hpp \
     ImgClassifier/ProfileImage.hpp \
-    Wrapper/RgbType.hpp
+    Wrapper/RgbType.hpp \
+    ImgClassifier/ImageMetadataContainer.hpp
 
 FORMS += \
         MainWindow.ui
