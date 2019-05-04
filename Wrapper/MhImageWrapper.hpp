@@ -191,6 +191,42 @@ namespace Mh {
 	static bool paste(const ImageWrapper& to, const ImageWrapper& from, int left, int top, int alpha);
 	bool pasteFrom(const ImageWrapper& from, int left, int top, int alpha);
 	bool pasteTo(const ImageWrapper& to, int left, int top, int alpha);
+	// Cloning
+	ImageWrapper copyThumbmail(int pixelCnt) const;
+	ImageWrapper copy(int left, int top, int right, int bottom) const;
+	ImageWrapper cloneAs4Bits( ) const;
+	ImageWrapper cloneAs8Bits( ) const;
+	ImageWrapper cloneAsGreyscale( ) const;
+	ImageWrapper cloneAs16Bits555( ) const;
+	ImageWrapper cloneAs16Bits565( ) const;
+	ImageWrapper cloneAs24Bits( ) const;
+	ImageWrapper cloneAs32Bits( ) const;
+	ImageWrapper cloneQuantizeXiaolinWu( ) const;
+	ImageWrapper cloneQuantizeNeuQuant( ) const;
+	ImageWrapper cloneQuantizeCarlsten( ) const;
+	ImageWrapper cloneThreshold( unsigned char hold ) const;
+	ImageWrapper cloneDitherFS( ) const;
+	ImageWrapper cloneDitherBayer4x4( ) const;
+	ImageWrapper cloneDitherBayer8x8( ) const;
+	ImageWrapper cloneDitherBayer16x16( ) const;
+	ImageWrapper cloneDitherCluster6x6( ) const;
+	ImageWrapper cloneDitherCluster8x8( ) const;
+	ImageWrapper cloneDitherCluster16x16( ) const;
+	ImageWrapper cloneAsStandardType( ) const;
+	ImageWrapper cloneAsFloat( ) const;
+	ImageWrapper cloneAsRGBF( ) const;
+	ImageWrapper cloneAsRGBAF( ) const;
+	ImageWrapper cloneAsUINT16( ) const;
+	ImageWrapper cloneAsRGB16( ) const;
+	ImageWrapper cloneAsRGBA16( ) const;
+	ImageWrapper cloneTonemapDrago03( double gamma = 2.2, double exposure = 0.0 ) const;
+	ImageWrapper cloneTonemapReinhard05( double intensity = 0.0,
+				double contrast = 0.0 ) const;
+	ImageWrapper cloneTonemapReinhard05Ex( double intensity = 0.0, double contrast = 0.0,
+				  double adaptation = 1.0,
+				  double color_correction = 0.0 ) const;
+	ImageWrapper cloneTonemapFattal02( double color_saturation = 0.5,
+				  double attenuation = 0.85 ) const;
 	};
 
 } // namespace Mh

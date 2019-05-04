@@ -1328,6 +1328,320 @@ namespace Mh {
 		else return false;
 	}
 
+	ImageWrapper ImageWrapper::copyThumbmail(int pixelCnt) const
+{
+		ImageWrapper tmp;
+		if ( pimpl && !pimpl->isValid( ) ) {
+		ImageWrapper_imp tmpi =	pimpl->createThumbmail( pixelCnt );
+		*tmp.pimpl = std::move( tmpi );
+		}
+		return tmp;
+}
+	ImageWrapper ImageWrapper::copy(int left, int top, int right, int bottom) const
+{
+		ImageWrapper tmp;
+		if ( pimpl && !pimpl->isValid( ) ) {
+		ImageWrapper_imp tmpi =	pimpl->copy( left,top,right,bottom );
+		*tmp.pimpl = std::move( tmpi );
+		}
+		return tmp;
+}
+
+	ImageWrapper ImageWrapper::cloneAs4Bits( ) const
+{
+		ImageWrapper tmp;
+		if ( pimpl && !pimpl->isValid( ) ) {
+		ImageWrapper_imp tmpi =	pimpl->convertTo4Bits();
+		*tmp.pimpl = std::move( tmpi );
+		}
+		return tmp;
+}
+
+	ImageWrapper ImageWrapper::cloneAs8Bits( ) const
+{
+		ImageWrapper tmp;
+		if ( pimpl && !pimpl->isValid( ) ) {
+		ImageWrapper_imp tmpi =	pimpl->convertTo8Bits();
+		*tmp.pimpl = std::move( tmpi );
+		}
+		return tmp;
+}
+
+	ImageWrapper ImageWrapper::cloneAsGreyscale( ) const
+{
+		ImageWrapper tmp;
+		if ( pimpl && !pimpl->isValid( ) ) {
+		ImageWrapper_imp tmpi =	pimpl->convertToGreyscale();
+		*tmp.pimpl = std::move( tmpi );
+		}
+		return tmp;
+}
+
+	ImageWrapper ImageWrapper::cloneAs16Bits555( ) const
+{
+		ImageWrapper tmp;
+		if ( pimpl && !pimpl->isValid( ) ) {
+		ImageWrapper_imp tmpi =	pimpl->convertTo16Bits555();
+		*tmp.pimpl = std::move( tmpi );
+		}
+		return tmp;
+}
+
+	ImageWrapper ImageWrapper::cloneAs16Bits565( ) const
+{
+		ImageWrapper tmp;
+		if ( pimpl && !pimpl->isValid( ) ) {
+		ImageWrapper_imp tmpi =	pimpl->convertTo16Bits565();
+		*tmp.pimpl = std::move( tmpi );
+		}
+		return tmp;
+}
+
+	ImageWrapper ImageWrapper::cloneAs24Bits( ) const
+{
+		ImageWrapper tmp;
+		if ( pimpl && !pimpl->isValid( ) ) {
+		ImageWrapper_imp tmpi =	pimpl->convertTo24Bits();
+		*tmp.pimpl = std::move( tmpi );
+		}
+		return tmp;
+}
+
+	ImageWrapper ImageWrapper::cloneAs32Bits( ) const
+{
+		ImageWrapper tmp;
+		if ( pimpl && !pimpl->isValid( ) ) {
+		ImageWrapper_imp tmpi =	pimpl->convertTo32Bits();
+		*tmp.pimpl = std::move( tmpi );
+		}
+		return tmp;
+}
+
+	ImageWrapper ImageWrapper::cloneQuantizeXiaolinWu( ) const
+{
+		ImageWrapper tmp;
+		if ( pimpl && !pimpl->isValid( ) ) {
+		ImageWrapper_imp tmpi =	pimpl->quantizeXiaolinWu();
+		*tmp.pimpl = std::move( tmpi );
+		}
+		return tmp;
+}
+
+	ImageWrapper ImageWrapper::cloneQuantizeNeuQuant( ) const
+{
+		ImageWrapper tmp;
+		if ( pimpl && !pimpl->isValid( ) ) {
+		ImageWrapper_imp tmpi =	pimpl->quantizeNeuQuant();
+		*tmp.pimpl = std::move( tmpi );
+		}
+		return tmp;
+}
+
+	ImageWrapper ImageWrapper::cloneQuantizeCarlsten( ) const
+{
+		ImageWrapper tmp;
+		if ( pimpl && !pimpl->isValid( ) ) {
+		ImageWrapper_imp tmpi =	pimpl->quantizeCarlsten();
+		*tmp.pimpl = std::move( tmpi );
+		}
+		return tmp;
+}
+
+	ImageWrapper ImageWrapper::cloneThreshold( unsigned char hold ) const
+{
+		ImageWrapper tmp;
+		if ( pimpl && !pimpl->isValid( ) ) {
+		ImageWrapper_imp tmpi =	pimpl->threshold(hold);
+		*tmp.pimpl = std::move( tmpi );
+		}
+		return tmp;
+}
+
+	ImageWrapper ImageWrapper::cloneDitherFS( ) const
+{
+		ImageWrapper tmp;
+		if ( pimpl && !pimpl->isValid( ) ) {
+		ImageWrapper_imp tmpi =	pimpl->ditherFS();
+		*tmp.pimpl = std::move( tmpi );
+		}
+		return tmp;
+}
+
+	ImageWrapper ImageWrapper::cloneDitherBayer4x4( ) const
+{
+		ImageWrapper tmp;
+		if ( pimpl && !pimpl->isValid( ) ) {
+		ImageWrapper_imp tmpi =	pimpl->ditherBayer4x4();
+		*tmp.pimpl = std::move( tmpi );
+		}
+		return tmp;
+}
+
+	ImageWrapper ImageWrapper::cloneDitherBayer8x8( ) const
+{
+		ImageWrapper tmp;
+		if ( pimpl && !pimpl->isValid( ) ) {
+		ImageWrapper_imp tmpi =	pimpl->ditherBayer8x8();
+		*tmp.pimpl = std::move( tmpi );
+		}
+		return tmp;
+}
+
+	ImageWrapper ImageWrapper::cloneDitherBayer16x16( ) const
+{
+		ImageWrapper tmp;
+		if ( pimpl && !pimpl->isValid( ) ) {
+		ImageWrapper_imp tmpi =	pimpl->ditherBayer16x16();
+		*tmp.pimpl = std::move( tmpi );
+		}
+		return tmp;
+}
+
+	ImageWrapper ImageWrapper::cloneDitherCluster6x6( ) const
+{
+		ImageWrapper tmp;
+		if ( pimpl && !pimpl->isValid( ) ) {
+		ImageWrapper_imp tmpi =	pimpl->ditherCluster6x6();
+		*tmp.pimpl = std::move( tmpi );
+		}
+		return tmp;
+}
+
+	ImageWrapper ImageWrapper::cloneDitherCluster8x8( ) const
+{
+		ImageWrapper tmp;
+		if ( pimpl && !pimpl->isValid( ) ) {
+		ImageWrapper_imp tmpi =	pimpl->ditherCluster8x8();
+		*tmp.pimpl = std::move( tmpi );
+		}
+		return tmp;
+}
+
+	ImageWrapper ImageWrapper::cloneDitherCluster16x16( ) const
+{
+		ImageWrapper tmp;
+		if ( pimpl && !pimpl->isValid( ) ) {
+		ImageWrapper_imp tmpi =	pimpl->ditherCluster16x16();
+		*tmp.pimpl = std::move( tmpi );
+		}
+		return tmp;
+}
+
+	ImageWrapper ImageWrapper::cloneAsStandardType( ) const
+{
+		ImageWrapper tmp;
+		if ( pimpl && !pimpl->isValid( ) ) {
+		ImageWrapper_imp tmpi =	pimpl->convertToStandardType();
+		*tmp.pimpl = std::move( tmpi );
+		}
+		return tmp;
+}
+
+	ImageWrapper ImageWrapper::cloneAsFloat( ) const
+{
+		ImageWrapper tmp;
+		if ( pimpl && !pimpl->isValid( ) ) {
+		ImageWrapper_imp tmpi =	pimpl->convertToFloat();
+		*tmp.pimpl = std::move( tmpi );
+		}
+		return tmp;
+}
+
+	ImageWrapper ImageWrapper::cloneAsRGBF( ) const
+{
+		ImageWrapper tmp;
+		if ( pimpl && !pimpl->isValid( ) ) {
+		ImageWrapper_imp tmpi =	pimpl->convertToRGBF();
+		*tmp.pimpl = std::move( tmpi );
+		}
+		return tmp;
+}
+
+	ImageWrapper ImageWrapper::cloneAsRGBAF( ) const
+{
+		ImageWrapper tmp;
+		if ( pimpl && !pimpl->isValid( ) ) {
+		ImageWrapper_imp tmpi =	pimpl->convertToRGBAF();
+		*tmp.pimpl = std::move( tmpi );
+		}
+		return tmp;
+}
+
+	ImageWrapper ImageWrapper::cloneAsUINT16( ) const
+{
+		ImageWrapper tmp;
+		if ( pimpl && !pimpl->isValid( ) ) {
+		ImageWrapper_imp tmpi =	pimpl->convertToUINT16();
+		*tmp.pimpl = std::move( tmpi );
+		}
+		return tmp;
+}
+
+	ImageWrapper ImageWrapper::cloneAsRGB16( ) const
+{
+		ImageWrapper tmp;
+		if ( pimpl && !pimpl->isValid( ) ) {
+		ImageWrapper_imp tmpi =	pimpl->convertToRGB16();
+		*tmp.pimpl = std::move( tmpi );
+		}
+		return tmp;
+}
+
+	ImageWrapper ImageWrapper::cloneAsRGBA16( ) const
+{
+		ImageWrapper tmp;
+		if ( pimpl && !pimpl->isValid( ) ) {
+		ImageWrapper_imp tmpi =	pimpl->convertToRGBA16();
+		*tmp.pimpl = std::move( tmpi );
+		}
+		return tmp;
+}
+
+	ImageWrapper ImageWrapper::cloneTonemapDrago03( double gamma, double exposure) const
+{
+		ImageWrapper tmp;
+		if ( pimpl && !pimpl->isValid( ) ) {
+		ImageWrapper_imp tmpi =	pimpl->tonemapDrago03(gamma,exposure);
+		*tmp.pimpl = std::move( tmpi );
+		}
+		return tmp;
+}
+
+	ImageWrapper ImageWrapper::cloneTonemapReinhard05( double intensity,
+				double contrast) const
+{
+		ImageWrapper tmp;
+		if ( pimpl && !pimpl->isValid( ) ) {
+		ImageWrapper_imp tmpi =	pimpl->tonemapReinhard05(intensity,contrast);
+		*tmp.pimpl = std::move( tmpi );
+		}
+		return tmp;
+}
+
+	ImageWrapper ImageWrapper::cloneTonemapReinhard05Ex( double intensity, double contrast,
+				  double adaptation,
+				  double color_correction) const
+		{
+				ImageWrapper tmp;
+				if ( pimpl && !pimpl->isValid( ) ) {
+				ImageWrapper_imp tmpi =	pimpl->tonemapReinhard05Ex(intensity,contrast,adaptation,color_correction);
+				*tmp.pimpl = std::move( tmpi );
+				}
+				return tmp;
+	}
+
+	ImageWrapper ImageWrapper::cloneTonemapFattal02( double color_saturation,
+				  double attenuation) const
+{
+		ImageWrapper tmp;
+		if ( pimpl && !pimpl->isValid( ) ) {
+		ImageWrapper_imp tmpi =	pimpl->tonemapFattal02(color_saturation,attenuation);
+		*tmp.pimpl = std::move( tmpi );
+		}
+		return tmp;
+}
+
+
 } // namespace Mh
 
 unsigned ImageRead( void *buffer, unsigned size, unsigned count,
