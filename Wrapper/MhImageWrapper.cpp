@@ -4,6 +4,7 @@ extern "C" {
 // #define FREEIMAGE_LIB
 #include <FreeImage.h>
 }
+#include <cstring>
 
 unsigned ImageRead( void *buffer, unsigned size, unsigned count, void *handle );
 unsigned ImageWrite( void *buffer, unsigned size, unsigned count,
@@ -664,6 +665,15 @@ namespace Mh {
 	bool pasteTo(const ImageWrapper_imp& to, int left, int top, int alpha) const
 	{
 		return paste(to,*this,left,top,alpha);
+	}
+	std::vector<char> getMemoryAc() const
+	{
+		std::vector<char> tmp;
+		FIMEMORY *stream = FreeImage_OpenMemory();
+		const size_t nsiz = (getBPP() / 8) * getWidth() * getHeight();
+		tmp.resize(nsiz);
+		memcpy(tmp.data(),getBytes(),nsiz);
+		return tmp;
 	}
 	};
 
@@ -1640,6 +1650,11 @@ namespace Mh {
 		}
 		return tmp;
 }
+	std::vector<char> ImageWrapper::getMemoryAc() const
+	{
+		if(pimpl && pimpl->isValid()) return pimpl->getMemoryAc();
+		else return std::vector<char>();
+	}
 
 
 } // namespace Mh

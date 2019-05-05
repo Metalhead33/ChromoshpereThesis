@@ -10,7 +10,9 @@ private:
 	float sharpnessMin, sharpnessMax, sharpnessAvg;
 	unsigned width, height;
 	std::string path;
+	bool isValid;
 public:
+	ImageMetadataContainer(ImageMetadataContainer&& mv);
 	ImageMetadataContainer(const Mh::ImageWrapper& original, const std::string& npath);
 	ImageMetadataContainer(Mh::ImageWrapper&& original, std::string&& npath);
 	const Mh::ImageWrapper &getIcon() const;
@@ -22,6 +24,7 @@ public:
 	unsigned getHeight() const;
 	const std::string& getPath() const;
 	float calculateDifference(const ImageMetadataContainer& other) const;
+	bool isItValid() const;
 };
 
 #endif // IMAGEMETADATACONTAINER_HPP

@@ -23,7 +23,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 CONFIG += c++1z
-LIBS += -lfreeimage
+LIBS += -lfreeimage -lphysfs
 
 SOURCES += \
         main.cpp \
@@ -32,7 +32,10 @@ SOURCES += \
     Wrapper/BlurImage.cpp \
     Wrapper/MhImageWrapper.cpp \
     ImgClassifier/ProfileImage.cpp \
-    ImgClassifier/ImageMetadataContainer.cpp
+    ImgClassifier/ImageMetadataContainer.cpp \
+    Io/PhysFsFileHandle.cpp \
+    ImgClassifier/ImageCollection.cpp \
+    Window/SharpenDialog.cpp
 
 HEADERS += \
         MainWindow.hpp \
@@ -50,10 +53,14 @@ HEADERS += \
     Wrapper/Matrix.hpp \
     ImgClassifier/ProfileImage.hpp \
     Wrapper/RgbType.hpp \
-    ImgClassifier/ImageMetadataContainer.hpp
+    ImgClassifier/ImageMetadataContainer.hpp \
+    Io/PhysFsFileHandle.hpp \
+    ImgClassifier/ImageCollection.hpp \
+    Window/SharpenDialog.hpp
 
 FORMS += \
-        MainWindow.ui
+        MainWindow.ui \
+    Window/SharpenDialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

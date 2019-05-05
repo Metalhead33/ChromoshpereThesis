@@ -7,14 +7,21 @@ const int THUMBNAIL_SIZE = 16384;
 const int BLUR_RADIUS = 15;
 typedef PixelWrapper<float> GreyscalePixelWrapper;
 
+ImageMetadataContainer::ImageMetadataContainer(ImageMetadataContainer&& mv)
+	: icon(std::move(mv.icon)), iconGreyscale(std::move(mv.iconGreyscale)),
+	  sharpnessMin(mv.sharpnessMin), sharpnessMax(mv.sharpnessMax), sharpnessAvg(mv.sharpnessAvg),
+	  width(mv.width), height(mv.height), path(std::move(mv.path)), isValid(mv.isValid)
+{
+	mv.isValid = false;
+}
 ImageMetadataContainer::ImageMetadataContainer(const Mh::ImageWrapper& original, const std::string& npath)
-	: icon(original.copyThumbmail(THUMBNAIL_SIZE)), width(original.getWidth()), height(original.getWidth()), path(npath)
+	: icon(original.copyThumbmail(THUMBNAIL_SIZE)), width(original.getWidth()), height(original.getWidth()), path(npath),isValid(true)
 {
 	produceSharpnessProfile(original,BLUR_RADIUS,&sharpnessMin,&sharpnessMax,&sharpnessAvg);
 	iconGreyscale = icon.cloneAsFloat();
 }
 ImageMetadataContainer::ImageMetadataContainer(Mh::ImageWrapper&& original, std::string&& npath)
-	: width(original.getWidth()), height(original.getWidth()), path(npath)
+	: width(original.getWidth()), height(original.getWidth()), path(npath),isValid(true)
 {
 	produceSharpnessProfile(original,BLUR_RADIUS,&sharpnessMin,&sharpnessMax,&sharpnessAvg);
 	icon = std::move(original);
@@ -70,4 +77,8 @@ float ImageMetadataContainer::calculateDifference(const ImageMetadataContainer& 
 		}
 	}
 	return diff;
+}
+bool ImageMetadataContainer::isItValid() const
+{
+	return isValid;
 }

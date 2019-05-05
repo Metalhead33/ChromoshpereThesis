@@ -21,6 +21,13 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #include "../Io/FIO.hpp"
+
+struct MemoryBuffer
+{
+	void* ptr;
+	size_t size;
+};
+
 namespace Mh {
 
 	enum class ImageFormat : int {
@@ -227,6 +234,7 @@ namespace Mh {
 				  double color_correction = 0.0 ) const;
 	ImageWrapper cloneTonemapFattal02( double color_saturation = 0.5,
 				  double attenuation = 0.85 ) const;
+	std::vector<char> getMemoryAc() const;
 	};
 
 } // namespace Mh
