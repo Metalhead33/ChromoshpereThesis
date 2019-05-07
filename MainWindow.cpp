@@ -5,6 +5,7 @@
 #include "Io/StdStream.hpp"
 #include "ImgClassifier/ProfileImage.hpp"
 #include <stdexcept>
+#include "Window/ImageAdjuster.hpp"
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
@@ -47,6 +48,26 @@ void MainWindow::on_compose2img_clicked()
 	QMessageBox messageBox;
 	messageBox.information(this,"Success!","Successfully saved the composite!");
 	messageBox.setFixedSize(500,200);
+	} catch(const std::exception& e)
+	{
+		QMessageBox messageBox;
+		messageBox.critical(this,"Error",e.what());
+		messageBox.setFixedSize(500,200);
+	}
+}
+
+void MainWindow::on_editImg_clicked()
+{
+	try {
+	auto fileName1 = QFileDialog::getOpenFileName(this,
+													 tr("Open Image"), "", tr("JPEG Image Files (*.jpg)"));
+	if(!fileName1.length()) return;
+	auto file1 = StdStream::createReader(fileName1.toStdString());
+	auto pic1 = Mh::ImageWrapper(*file1);
+	ImageAdjuster adjust(std::move(pic1),this);
+	adjust.setModal(true);
+	adjust.exec();
+	adjust.exec();
 	} catch(const std::exception& e)
 	{
 		QMessageBox messageBox;

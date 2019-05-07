@@ -18,6 +18,8 @@ public:
 private slots:
 	void on_compose2img_clicked();
 
+	void on_editImg_clicked();
+
 private:
 	Ui::MainWindow *ui;
 };
