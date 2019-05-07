@@ -234,7 +234,7 @@ namespace Mh {
 				  double color_correction = 0.0 ) const;
 	ImageWrapper cloneTonemapFattal02( double color_saturation = 0.5,
 				  double attenuation = 0.85 ) const;
-	std::vector<char> getMemoryAc() const;
+	std::vector<char> saveToMemory(ImageFileType filetype) const;
 	};
 
 } // namespace Mh

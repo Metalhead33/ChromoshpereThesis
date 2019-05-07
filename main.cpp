@@ -2,6 +2,7 @@
 #include "MainWindow.hpp"
 #include <QApplication>
 #include <iomanip>
+#include "Io/PhysFsFileHandle.hpp"
 
 int main( int argc, char *argv[] ) {
 	/*QApplication a(argc, argv);
@@ -27,7 +28,7 @@ int main( int argc, char *argv[] ) {
 			<< "Max: " << std::setprecision(7)<< fmax << "\n"
 			<< "Avg: " << std::setprecision(7)<< favg << "\n";*/
 
-	if ( argc >= 2 ) {
+	/*if ( argc >= 2 ) {
 	Mh::ImageWrapper prev;
 	for ( int i = 1; i < argc; ++i ) {
 		Mh::ImageWrapper img(argv[i]);
@@ -38,6 +39,12 @@ int main( int argc, char *argv[] ) {
 		} else prev = std::move(img);
 	}
 	prev.save(Mh::ImageFileType::JPEG,"/tmp/finish.jpg");
-	}
-	return 0;
+	}*/
+	PHYSFS_init(argv[0]);
+	QApplication a(argc, argv);
+	MainWindow win(nullptr);
+	win.show();
+	int b = a.exec();
+	PHYSFS_deinit();
+	return b;
 }

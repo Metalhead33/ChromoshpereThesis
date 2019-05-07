@@ -2,6 +2,8 @@
 #include "ProfileImage.hpp"
 #include "../Wrapper/PixelWrapper.hpp"
 #include <numeric>
+#include <QImage>
+#include <QPixmap>
 
 const int THUMBNAIL_SIZE = 16384;
 const int BLUR_RADIUS = 15;
@@ -10,26 +12,38 @@ typedef PixelWrapper<float> GreyscalePixelWrapper;
 ImageMetadataContainer::ImageMetadataContainer(ImageMetadataContainer&& mv)
 	: icon(std::move(mv.icon)), iconGreyscale(std::move(mv.iconGreyscale)),
 	  sharpnessMin(mv.sharpnessMin), sharpnessMax(mv.sharpnessMax), sharpnessAvg(mv.sharpnessAvg),
-	  width(mv.width), height(mv.height), path(std::move(mv.path)), isValid(mv.isValid)
+	  width(mv.width), height(mv.height), fullPath(std::move(mv.fullPath)), localPath(std::move(mv.localPath)), isValid(mv.isValid)
 {
 	mv.isValid = false;
 }
-ImageMetadataContainer::ImageMetadataContainer(const Mh::ImageWrapper& original, const std::string& npath)
-	: icon(original.copyThumbmail(THUMBNAIL_SIZE)), width(original.getWidth()), height(original.getWidth()), path(npath),isValid(true)
+ImageMetadataContainer::ImageMetadataContainer(const Mh::ImageWrapper& original, const std::string& npath, const std::string& npath2)
+	: width(original.getWidth()), height(original.getWidth()), fullPath(npath), localPath(npath2),
+	  isValid(true)
 {
+	Mh::ImageWrapper tIcon = original.copyThumbmail(THUMBNAIL_SIZE);
 	produceSharpnessProfile(original,BLUR_RADIUS,&sharpnessMin,&sharpnessMax,&sharpnessAvg);
-	iconGreyscale = icon.cloneAsFloat();
+	iconGreyscale = tIcon.cloneAsFloat();
+	tIcon.convertTo24Bits();
+	auto jpEgV = tIcon.saveToMemory(Mh::ImageFileType::JPEG);
+	QPixmap img;
+	img.loadFromData(reinterpret_cast<uchar*>(jpEgV.data()),jpEgV.size());
+	icon = QIcon(img);
 }
-ImageMetadataContainer::ImageMetadataContainer(Mh::ImageWrapper&& original, std::string&& npath)
-	: width(original.getWidth()), height(original.getWidth()), path(npath),isValid(true)
+ImageMetadataContainer::ImageMetadataContainer(Mh::ImageWrapper&& original, std::string&& npath, std::string&& npath2)
+	: width(original.getWidth()), height(original.getWidth()), fullPath(npath), localPath(npath2), isValid(true)
 {
 	produceSharpnessProfile(original,BLUR_RADIUS,&sharpnessMin,&sharpnessMax,&sharpnessAvg);
-	icon = std::move(original);
-	icon.createThumbmail(THUMBNAIL_SIZE);
-	iconGreyscale = icon.cloneAsFloat();
+	Mh::ImageWrapper tIcon = std::move(original);
+	tIcon.createThumbmail(THUMBNAIL_SIZE);
+	iconGreyscale = tIcon.cloneAsFloat();
+	tIcon.convertTo24Bits();
+	auto jpEgV = tIcon.saveToMemory(Mh::ImageFileType::JPEG);
+	QPixmap img;
+	img.loadFromData(reinterpret_cast<uchar*>(jpEgV.data()),jpEgV.size());
+	icon = QIcon(img);
 }
 
-const Mh::ImageWrapper& ImageMetadataContainer::getIcon() const
+const QIcon &ImageMetadataContainer::getIcon() const
 {
 	return icon;
 }
@@ -57,15 +71,19 @@ unsigned ImageMetadataContainer::getHeight() const
 {
 	return height;
 }
-const std::string& ImageMetadataContainer::getPath() const
+const std::string& ImageMetadataContainer::getFullPath() const
 {
-	return path;
+	return fullPath;
+}
+const std::string& ImageMetadataContainer::getLocalPath()  const
+{
+	return localPath;
 }
 float ImageMetadataContainer::calculateDifference(const ImageMetadataContainer& other) const
 {
-	if(!icon.hasPixels() || !other.icon.hasPixels()) return std::numeric_limits<float>::infinity();
-	GreyscalePixelWrapper wrapThis(icon.getBytes(),icon.getWidth(),icon.getHeight());
-	GreyscalePixelWrapper wrapOther(other.icon.getBytes(),other.icon.getWidth(),other.icon.getHeight());
+	if(!iconGreyscale.hasPixels() || !other.iconGreyscale.hasPixels()) return std::numeric_limits<float>::infinity();
+	GreyscalePixelWrapper wrapThis(iconGreyscale.getBytes(),iconGreyscale.getWidth(),iconGreyscale.getHeight());
+	GreyscalePixelWrapper wrapOther(other.iconGreyscale.getBytes(),other.iconGreyscale.getWidth(),other.iconGreyscale.getHeight());
 	float diff = 0.0f;
 	for(int i = 0; i < wrapThis.height; ++i)
 	{

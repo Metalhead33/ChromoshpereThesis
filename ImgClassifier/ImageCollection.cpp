@@ -10,15 +10,16 @@ inline bool endsWith(const std::string& s, const std::string& suffix)
 ImageCollection::ImageCollection(const std::string& npath)
 	: path(npath)
 {
-	auto paths = PhysFS::FileHandle::enumerateFilesFullpath(npath);
+	auto paths = PhysFS::FileHandle::enumerateFiles(npath);
 	for(auto it = std::begin(paths); it != std::end(paths); ++it)
 	{
 		if( endsWith(*it,".jpg") || endsWith(*it,".JPG") || endsWith(*it,".jpeg") || endsWith(*it,".JPEG"))
 		{
-			auto thandle = PhysFS::FileHandle::openRead(*it);
+			std::string fullpath = npath + "/" + *it;
+			auto thandle = PhysFS::FileHandle::openRead(fullpath);
 			Mh::ImageWrapper tmpWrap(Mh::ImageFileType::JPEG,*thandle);
 			std::vector<ImageMetadataContainer> images;
-			images.push_back(ImageMetadataContainer(std::move(tmpWrap),std::move(*it)));
+			images.push_back(ImageMetadataContainer(std::move(tmpWrap),std::move(fullpath),std::move(*it)));
 			clasters.push_back(std::move(images));
 		}
 	}
@@ -45,11 +46,11 @@ Mh::ImageWrapper ImageCollection::composeClaster(ClasterIterator it)
 	Mh::ImageWrapper tmp;
 	if(it->size() > 1)
 	{
-		auto thandle = PhysFS::FileHandle::openRead((*it)[0].getPath());
+		auto thandle = PhysFS::FileHandle::openRead((*it)[0].getFullPath());
 		Mh::ImageWrapper tmpWrap(Mh::ImageFileType::JPEG,*thandle);
 		for(size_t i = 1; i < it->size();++i)
 		{
-			auto thandleB = PhysFS::FileHandle::openRead((*it)[i].getPath());
+			auto thandleB = PhysFS::FileHandle::openRead((*it)[i].getFullPath());
 			Mh::ImageWrapper tmpWrapB(Mh::ImageFileType::JPEG,*thandleB);
 			tmpWrap = sharpnessComposite(tmpWrap,tmpWrapB);
 		}
@@ -106,7 +107,7 @@ void ImageCollection::createClasters(float maximalDifference)
 					(*it)[0].getHeight() == (*xit)[0].getHeight() &&
 						(*it)[0].calculateDifference((*xit)[0]) <= maximalDifference)
 				{
-					it->push_back((*xit)[0]);
+					it->push_back(std::move((*xit)[0]));
 				}
 			}
 		}

@@ -35,7 +35,8 @@ SOURCES += \
     ImgClassifier/ImageMetadataContainer.cpp \
     Io/PhysFsFileHandle.cpp \
     ImgClassifier/ImageCollection.cpp \
-    Window/SharpenDialog.cpp
+    Window/SharpenDialog.cpp \
+    ImgClassifier/ImageClaster.cpp
 
 HEADERS += \
         MainWindow.hpp \
@@ -56,7 +57,8 @@ HEADERS += \
     ImgClassifier/ImageMetadataContainer.hpp \
     Io/PhysFsFileHandle.hpp \
     ImgClassifier/ImageCollection.hpp \
-    Window/SharpenDialog.hpp
+    Window/SharpenDialog.hpp \
+    ImgClassifier/ImageClaster.hpp
 
 FORMS += \
         MainWindow.ui \

@@ -666,13 +666,21 @@ namespace Mh {
 	{
 		return paste(to,*this,left,top,alpha);
 	}
-	std::vector<char> getMemoryAc() const
+	std::vector<char> saveToMemory(ImageFileType filetype) const
 	{
 		std::vector<char> tmp;
+		if(container) {
 		FIMEMORY *stream = FreeImage_OpenMemory();
-		const size_t nsiz = (getBPP() / 8) * getWidth() * getHeight();
-		tmp.resize(nsiz);
-		memcpy(tmp.data(),getBytes(),nsiz);
+		if(FreeImage_SaveToMemory(FREE_IMAGE_FORMAT(filetype),container.get(),stream,0))
+		{
+			BYTE *mem_buffer = nullptr;
+			DWORD size_in_bytes = 0;
+			FreeImage_AcquireMemory(stream, &mem_buffer, &size_in_bytes);
+			tmp.resize(size_in_bytes);
+			memcpy(tmp.data(),mem_buffer,size_in_bytes);
+		}
+		FreeImage_CloseMemory(stream);
+		}
 		return tmp;
 	}
 	};
@@ -1650,9 +1658,9 @@ namespace Mh {
 		}
 		return tmp;
 }
-	std::vector<char> ImageWrapper::getMemoryAc() const
+	std::vector<char> ImageWrapper::saveToMemory(ImageFileType filetype) const
 	{
-		if(pimpl && pimpl->isValid()) return pimpl->getMemoryAc();
+		if(pimpl && pimpl->isValid()) return pimpl->saveToMemory(filetype);
 		else return std::vector<char>();
 	}
 
