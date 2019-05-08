@@ -27,6 +27,7 @@ enum class BlurType : unsigned char {
 	box_blur_7x7
 };
 
+Mh::ImageWrapper greyScaleToRgb(const Mh::ImageWrapper& greyscale);
 Mh::ImageWrapper processGreyscale(const  Mh::ImageWrapper& image, const std::vector<float>& kernel, bool vertical);
 Mh::ImageWrapper processColoured(const  Mh::ImageWrapper& image, const std::vector<float>& kernel, bool vertical);
 
@@ -39,6 +40,9 @@ Mh::ImageWrapper rgbBlurAndCopy( const Mh::ImageWrapper &image, int blurRadius )
 
 Mh::ImageWrapper greyscaleSharpenAndCopy( const Mh::ImageWrapper &image, int sharpRadius );
 Mh::ImageWrapper rgbSharpenAndCopy( const Mh::ImageWrapper &image, int sharpRadius );
+
+void optimizedBlur( const Mh::ImageWrapper &input, Mh::ImageWrapper &output,
+			int blurRadius, bool Yaxis );
 
 void greyscaleBlurImage( Mh::ImageWrapper &image,
 		int blurRadius ); // Destroys the original image!

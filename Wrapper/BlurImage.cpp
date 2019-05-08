@@ -9,6 +9,27 @@ static const char *GreyscaleOnlyError =
 	"Only greyscale floating-point images are supported!";
 
 
+Mh::ImageWrapper greyScaleToRgb(const Mh::ImageWrapper& greyscale)
+{
+	if ( greyscale.getFormat( ) != Mh::ImageFormat::FLOAT )
+	throw std::runtime_error( GreyscaleOnlyError );
+	GreyscalePixels input( static_cast< float * >( greyscale.getBytes( ) ),
+			   greyscale.getWidth( ), greyscale.getHeight( ) );
+	Mh::ImageWrapper tmp(Mh::ImageFormat::BITMAP,greyscale.getWidth(),greyscale.getHeight(),24);
+	PixelWrapper<PixelRgb8> output( tmp.getBytes( ),
+				tmp.getWidth( ), tmp.getHeight( ) );
+	for ( int y = 0; y < input.height; ++y ) {
+	for ( int x = 0; x < input.width; ++x ) {
+		const float& iref = input[y][x];
+		PixelRgb8& oref = output[y][x];
+		oref.r = uint8_t(iref*255.0f);
+		oref.g = uint8_t(iref*255.0f);
+		oref.b = uint8_t(iref*255.0f);
+		}
+	}
+	return tmp;
+}
+
 Mh::ImageWrapper processGreyscale(const  Mh::ImageWrapper& image, const std::vector<float>& kernel, bool vertical)
 {
 	if ( image.getFormat( ) != Mh::ImageFormat::FLOAT )
@@ -135,13 +156,18 @@ void greyscaleBlurImage( Mh::ImageWrapper &image, int blurRadius ) {
 Mh::ImageWrapper greyscaleBlurAndCopy( const Mh::ImageWrapper &image, int blurRadius ) {
 	if ( image.getFormat( ) != Mh::ImageFormat::FLOAT )
 	throw std::runtime_error( GreyscaleOnlyError );
-	std::vector<float> blurKernel(blurRadius);
+	/*std::vector<float> blurKernel(blurRadius);
 	for(auto it = std::begin(blurKernel); it != std::end(blurKernel);++it)
 	{
 		*it = 1.0f / float(blurKernel.size());
 	}
 	Mh::ImageWrapper tmp = processGreyscale(image,blurKernel,false);
-	return processGreyscale(tmp,blurKernel,true);
+	return processGreyscale(tmp,blurKernel,true);*/
+	Mh::ImageWrapper a(image);
+	Mh::ImageWrapper b(a);
+	optimizedBlur(image,a,blurRadius,false);
+	optimizedBlur(a,b,blurRadius,true);
+	return b;
 }
 Mh::ImageWrapper rgbBlurAndCopy( const Mh::ImageWrapper &image, int blurRadius ) {
 	throw std::runtime_error( GreyscaleOnlyError );
@@ -254,6 +280,14 @@ void optimizedBlur( const GreyscalePixels &input, GreyscalePixels &output,
 		count = 0;
 	}
 	}
+}
+void optimizedBlur( const Mh::ImageWrapper &input, Mh::ImageWrapper &output,
+			int blurRadius, bool Yaxis ) {
+	GreyscalePixels dinput( static_cast< float * >( input.getBytes( ) ),
+			   input.getWidth( ), input.getHeight( ) );
+	GreyscalePixels doutput( static_cast< float * >( output.getBytes( ) ),
+				output.getWidth( ), output.getHeight( ) );
+	optimizedBlur(dinput,doutput,blurRadius,Yaxis);
 }
 void blur3x3( const GreyscalePixels &input, GreyscalePixels &output,
 		  const fmat3x3 &convolutionKernel ) {

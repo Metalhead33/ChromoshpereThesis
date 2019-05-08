@@ -1,6 +1,7 @@
 #include "ProfileDialog.hpp"
 #include "ui_ProfileDialog.h"
 #include "../ImgClassifier/ProfileImage.hpp"
+#include "../Wrapper/BlurImage.hpp"
 #include <QFileDialog>
 #include <QMessageBox>
 
@@ -30,7 +31,7 @@ void ProfileDialog::updateDisplay()
 	ui->AvgSharpness2->setText(QString::number(favg));
 	ui->MinSharpness2->setText(QString::number(fmin));
 	ui->MaxSharpness2->setText(QString::number(fmax));
-	Mh::ImageWrapper tmp = preview.cloneAsStandardType();
+	Mh::ImageWrapper tmp = greyScaleToRgb(preview);
 	auto jpEgV = tmp.saveToMemory(Mh::ImageFileType::JPEG);
 	image.loadFromData(reinterpret_cast<uchar*>(jpEgV.data()),jpEgV.size());
 	ui->ImageProfile->setPixmap(image);
@@ -45,7 +46,7 @@ void ProfileDialog::on_Discard_clicked()
 void ProfileDialog::on_Save_clicked()
 {
 	try {
-		Mh::ImageWrapper tmp = preview.cloneAsStandardType();
+		Mh::ImageWrapper tmp = greyScaleToRgb(preview);
 	auto saveName = QFileDialog::getSaveFileName(this,
 		tr("Save Image"), "", tr("JPEG Image Files (*.jpg)"));
 	if(!saveName.length()) return;
