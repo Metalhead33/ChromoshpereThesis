@@ -2,6 +2,7 @@
 #include "ui_ImageAdjuster.h"
 #include <QFileDialog>
 #include <QMessageBox>
+#include "../Wrapper/BlurImage.hpp"
 
 ImageAdjuster::ImageAdjuster(Mh::ImageWrapper&& mov, QWidget *parent) :
 	QDialog(parent),
@@ -15,6 +16,7 @@ ImageAdjuster::ImageAdjuster(Mh::ImageWrapper&& mov, QWidget *parent) :
 	ui->BrightnessSlider->setMaximum(100);
 	ui->GammaSlider->setMinimum(0);
 	ui->GammaSlider->setMaximum(100);
+	ui->SharpenSlider->setValue(0);
 	ui->SharpenSlider->setTickPosition(QSlider::TickPosition::TicksBothSides);
 	ui->SharpenSlider->setMinimum(0);
 	ui->SharpenSlider->setMaximum(15);
@@ -29,6 +31,10 @@ ImageAdjuster::~ImageAdjuster()
 void ImageAdjuster::updatePreview()
 {
 	preview = wrap;
+	if(sharpen > 1)
+	{
+		preview = rgbSharpenAndCopy(preview,sharpen);
+	}
 	preview.adjustColors(brightness,contrast,gamma,false);
 }
 void ImageAdjuster::updateImageView()
@@ -84,4 +90,5 @@ void ImageAdjuster::on_PreviewButton_accepted()
 		messageBox.critical(this,"Error",e.what());
 		messageBox.setFixedSize(500,200);
 	}
+	close();
 }

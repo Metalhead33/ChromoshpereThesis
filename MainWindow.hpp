@@ -20,6 +20,8 @@ private slots:
 
 	void on_editImg_clicked();
 
+	void on_profileImage_clicked();
+
 private:
 	Ui::MainWindow *ui;
 };

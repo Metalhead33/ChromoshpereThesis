@@ -41,7 +41,7 @@ Mh::ImageWrapper produceSharpnessProfile( const Mh::ImageWrapper &img,
 	Mh::ImageWrapper sharpGreyscale = img;
 	sharpGreyscale.convertToFloat( );
 	Mh::ImageWrapper blurredGreyscale =
-	blurAndCopy( sharpGreyscale, blurRadius );
+	greyscaleBlurAndCopy( sharpGreyscale, blurRadius );
 	GreyscalePixels sharpGreyscalePixels(
 	reinterpret_cast< float * >( sharpGreyscale.getBytes( ) ),
 	sharpGreyscale.getWidth( ), sharpGreyscale.getHeight( ) );

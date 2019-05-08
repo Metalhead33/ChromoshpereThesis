@@ -53,6 +53,19 @@
      <string>Edit image</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="profileImage">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>170</y>
+      <width>511</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Profile image</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">

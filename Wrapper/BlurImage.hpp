@@ -27,16 +27,23 @@ enum class BlurType : unsigned char {
 	box_blur_7x7
 };
 
-void blurImage( Mh::ImageWrapper &image,
+Mh::ImageWrapper processGreyscale(const  Mh::ImageWrapper& image, const std::vector<float>& kernel, bool vertical);
+Mh::ImageWrapper processColoured(const  Mh::ImageWrapper& image, const std::vector<float>& kernel, bool vertical);
+
+void greyscaleBlurImage( Mh::ImageWrapper &image,
 		BlurType blurType ); // Destroys the original image!
 Mh::ImageWrapper
-blurAndCopy( const Mh::ImageWrapper &image,
+greyscaleBlurAndCopy( const Mh::ImageWrapper &image,
 		 BlurType blurType ); // Des NOT destroy the original image!
+Mh::ImageWrapper rgbBlurAndCopy( const Mh::ImageWrapper &image, int blurRadius );
 
-void blurImage( Mh::ImageWrapper &image,
+Mh::ImageWrapper greyscaleSharpenAndCopy( const Mh::ImageWrapper &image, int sharpRadius );
+Mh::ImageWrapper rgbSharpenAndCopy( const Mh::ImageWrapper &image, int sharpRadius );
+
+void greyscaleBlurImage( Mh::ImageWrapper &image,
 		int blurRadius ); // Destroys the original image!
 Mh::ImageWrapper
-blurAndCopy( const Mh::ImageWrapper &image,
+greyscaleBlurAndCopy( const Mh::ImageWrapper &image,
 		 int blurRadius ); // Des NOT destroy the original image!
 
 #endif // BLURIMAGE_HPP

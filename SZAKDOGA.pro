@@ -36,7 +36,8 @@ SOURCES += \
     Io/PhysFsFileHandle.cpp \
     ImgClassifier/ImageCollection.cpp \
     Window/SharpenDialog.cpp \
-    Window/ImageAdjuster.cpp
+    Window/ImageAdjuster.cpp \
+    Window/ProfileDialog.cpp
 #    ImgClassifier/ImageClaster.cpp \
 #    ImgClassifier/ClasterCollection.cpp
 
@@ -60,14 +61,16 @@ HEADERS += \
     Io/PhysFsFileHandle.hpp \
     ImgClassifier/ImageCollection.hpp \
     Window/SharpenDialog.hpp \
-    Window/ImageAdjuster.hpp
+    Window/ImageAdjuster.hpp \
+    Window/ProfileDialog.hpp
 #    ImgClassifier/ImageClaster.hpp \
 #    ImgClassifier/ClasterCollection.hpp \
 
 FORMS += \
         MainWindow.ui \
     Window/SharpenDialog.ui \
-    Window/ImageAdjuster.ui
+    Window/ImageAdjuster.ui \
+    Window/ProfileDialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
